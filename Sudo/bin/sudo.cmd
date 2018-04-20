@@ -1,20 +1,11 @@
 @echo off
 
-if "%~1"=="?" goto HELP
-if "%~1"=="/?" goto HELP
-if "%~1"=="" goto HELP 
+:: Pass execution context information through environment variables.
+set SUDO_CMDLINE=%*
+set SUDO_ARG1=%1
+set SUDO_ARG2=%2
+set SUDO_CD=%CD%
+set SUDO_DRIVE=%CD:~0,2%
 
-:: Pass raw command line agruments and first argument to Elevate.vbs
-:: through environment variables.
-set ELEVATE_CMDLINE=%*
-set ELEVATE_APP=%1
-
+:: %~dpn0 is refering to this files name and %* sends along the full commandline  
 cscript //nologo "%~dpn0.vbs" %*
-
-GOTO:EOF
-
-:HELP
-echo  Provides a command line method of launching applications that prompt for elevation (Run as Administrator).
-echo.   
-echo    sudo [command]
-GOTO:EOF

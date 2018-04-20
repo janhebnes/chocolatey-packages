@@ -2,12 +2,12 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>Sudo</id>
-        <version>1.0.2</version>
+        <version>1.0.3</version>
         <title>Sudo</title>
         <authors>Jan Hebnes</authors>
         <owners>Jan Hebnes</owners>
         <licenseUrl>http://www.gnu.org/licenses/old-licenses/lgpl-2.0.html</licenseUrl>
-        <projectUrl>http://github.com/janhebnes/chocolatey-packages/Sudo</projectUrl>
+        <projectUrl>https://github.com/janhebnes/chocolatey-packages/tree/master/Sudo</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Used from a command line as e.g. "sudo cmd" or "sudo notepad" to elevate directly from the shell.</description>
         <summary>Sudo is used to elevate to administrator from the command line.</summary>

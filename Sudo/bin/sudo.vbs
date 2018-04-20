@@ -2,34 +2,40 @@
 ' // ***** Script Header *****
 ' //
 ' // File:      Sudo.vbs
-' //
 ' // Additional files required:  Sudo.cmd
 ' //
 ' // Purpose:   To provide a command line method of launching applications that
-' //            prompt for elevation (Run as Administrator) on Windows Vista.
+' //            prompt for elevation (Run as Administrator).
 ' //
-' // Usage:     (Not used directly.  Launched from Sudo.cmd.)
+' // Usage:     (Not used directly.  Launched from Sudo.cmd)
 ' //
-' // Version:   1.0.1
-' // Date :     01/03/2007
+' // Version:   1.1.0
+' // Date :     20/04/2018
 ' //
 ' // History:
-' // 1.0.0   01/02/2007  Created initial version.
-' // 1.0.1   01/03/2007  Added detailed usage output.
+' // 1.0.0   01-Feb-2007  Created initial version used internally.
+' // 1.0.1   01-Mar-2007  Added detailed usage output.
+' // 1.0.0	 23-Oct-2013  Released on chocolatey
+' // 1.0.1   08-Sep-2014  chocolatey framework changes required new version
+' // 1.0.2   12-Jun-2015  chocolatey framework changes required new version
+' // 1.1.0   20-Apr-2018  Added the option of keeping current directory 
+' //                      context by using the inserted . or _ as first command argument 
+' //                      when used a context cmd shell window is opened for setting 
+' //                      current directory context using _ hides this window 
 ' //
 ' // ***** End Header *****
 ' //***************************************************************************
-
 
 Set objShell = CreateObject("Shell.Application")
 Set objWshShell = WScript.CreateObject("WScript.Shell")
 Set objWshProcessEnv = objWshShell.Environment("PROCESS")
 
-' Get raw command line agruments and first argument from Elevate.cmd passed
-' in through environment variables.
-strCommandLine = objWshProcessEnv("ELEVATE_CMDLINE")
-strApplication = objWshProcessEnv("ELEVATE_APP")
-strArguments = Right(strCommandLine, (Len(strCommandLine) - Len(strApplication)))
+' Get execution context information from sudo.cmd passed in through environment variables.
+strCommandLine = objWshProcessEnv("SUDO_CMDLINE")
+strApplicationArgument1 = objWshProcessEnv("SUDO_ARG1")
+strApplicationArgument2 = objWshProcessEnv("SUDO_ARG2")
+strCurrentDirectory = objWshProcessEnv("SUDO_CD")
+strCurrentDrive = objWshProcessEnv("SUDO_DRIVE")
 
 If (WScript.Arguments.Count >= 1) Then
     strFlag = WScript.Arguments(0)
@@ -39,8 +45,45 @@ If (WScript.Arguments.Count >= 1) Then
         DisplayUsage
 		WScript.Quit
     Else
-		rem WScript.Echo "objShell.ShellExecute """ & strApplication & """, """ & strArguments & """, """", ""runas"" "
-        objShell.ShellExecute strApplication, strArguments, "", "runas"
+
+        boolKeepCurrentDirectoryContext = ((strApplicationArgument1 = ".") OR (strApplicationArgument1 = "_"))
+        boolHideCurrentDirectoryContextCommandWindow = (strApplicationArgument1 = "_")
+
+        If (boolKeepCurrentDirectoryContext = True) Then
+            
+            If (Len(strApplicationArgument2) > 0) Then  
+                strApplication = strApplicationArgument2
+                strArguments = Right(strCommandLine, (Len(strCommandLine) - (Len(strApplicationArgument1) + Len(strApplicationArgument2) + 1)))
+            Else
+                strApplication = "cmd"
+                strArguments = ""
+            End If
+
+            'Shell.ShellExecute method https://msdn.microsoft.com/en-us/library/windows/desktop/gg537745(v=vs.85).aspx
+
+            If (boolHideCurrentDirectoryContextCommandWindow) Then            
+                vShow = 0 'Open the application with a hidden window
+                'vShow = 2 'Open the application with a minimized window
+                'vShow = 7 'Open the application with a minimized window. The active window remains active.
+            Else
+                'vShow = 1  'Open the application with a normal window. If the window is minimized or maximized, the system restores it to its original size and position.
+                vShow = 10 'Open the application with its window in the default state specified by the application.
+            End If
+
+            'WScript.Echo "objShell.ShellExecute ""cmd"",""/C """ & strCurrentDrive & " && cd " & strCurrentDirectory & " && " & strApplication & " " & strArguments & """, """ & strCurrentDirectory & """, ""runas"", " & vShow
+            objShell.ShellExecute "cmd","/C """ & strCurrentDrive & " && cd " & strCurrentDirectory & " && " & strApplication & " " & strArguments & """", strCurrentDirectory, "runas", vShow
+
+        Else
+            strApplication = strApplicationArgument1
+            strArguments = Right(strCommandLine, (Len(strCommandLine) - Len(strApplication)))
+        
+            'WScript.Echo "objShell.ShellExecute """ & strApplication & """, """ & strArguments & """, """ & strCurrentDirectory & """, ""runas"" "
+            objShell.ShellExecute strApplication, strArguments, strCurrentDirectory, "runas"
+
+            'Note that strCurrentDirectory is not respected when runas is used, why the piped commands on a command shell is in use above 
+
+        End if
+         
     End If
 Else
     DisplayUsage
@@ -50,42 +93,44 @@ End If
 
 Sub DisplayUsage
 
-    WScript.Echo "Elevate - Elevation Command Line Tool for Windows Vista" & vbCrLf & _
+    WScript.Echo "Start application that prompt for elevation (Run as Administrator)." & vbCrLf & _
                  "" & vbCrLf & _
-                 "Purpose:" & vbCrLf & _
-                 "--------" & vbCrLf & _
-                 "To launch applications that prompt for elevation (i.e. Run as Administrator)" & vbCrLf & _
-                 "from the command line, a script, or the Run box." & vbCrLf & _
+                 "SUDO [.|_] command" & vbCrLf & _
                  "" & vbCrLf & _
-                 "Usage:   " & vbCrLf & _
-                 "" & vbCrLf & _
-                 "    elevate application <arguments>" & vbCrLf & _
+                 ".     Keep current directory, uses and elevated context cmd" & vbCrLf & _
+                 "_     Keep current directory, but hide the context cmd window" & vbCrLf & _
                  "" & vbCrLf & _
                  "" & vbCrLf & _
-                 "Sample usage:" & vbCrLf & _
+                 "Examples:" & vbCrLf & _
                  "" & vbCrLf & _
-                 "    elevate notepad ""C:\Windows\win.ini""" & vbCrLf & _
+                 "    sudo cmd /k cd ""C:\Program Files""" & vbCrLf & _
+                 "    or       sudo . cmd" & vbCrLf & _
+                 "    or       sudo . " & vbCrLf & _
                  "" & vbCrLf & _
-                 "    elevate cmd /k cd ""C:\Program Files""" & vbCrLf & _
+                 "    sudo powershell -NoExit -Command Set-Location 'C:\Windows'" & vbCrLf & _
+                 "    or       sudo . powershell" & vbCrLf & _
                  "" & vbCrLf & _
-                 "    elevate powershell -NoExit -Command Set-Location 'C:\Windows'" & vbCrLf & _
+                 "    sudo notepad ""c:\Windows\System32\drivers\etc\hosts""" & vbCrLf & _
+                 "    or       sudo _ notepad hosts" & vbCrLf & _
+                 "    or       sudo notepad %cd%\hosts" & vbCrLf & _
                  "" & vbCrLf & _
                  "" & vbCrLf & _
-                 "Usage with scripts: When using the elevate command with scripts such as" & vbCrLf & _
+                 "Note that keeping current directory requires an elevated cmd shell " & vbCrLf & _
+                 "that sets directory context before executing your command. " & vbCrLf & _ 
+                 "" & vbCrLf & _
+                 "You can also keep context by working with %CD%\ on file locations." & vbCrLf & _
+                 "" & vbCrLf & _
+                 "Usage with scripts: When using the sudo command with scripts such as" & vbCrLf & _
                  "Windows Script Host or Windows PowerShell scripts, you should specify" & vbCrLf & _
                  "the script host executable (i.e., wscript, cscript, powershell) as the " & vbCrLf & _
                  "application." & vbCrLf & _
                  "" & vbCrLf & _
                  "Sample usage with scripts:" & vbCrLf & _
                  "" & vbCrLf & _
-                 "    elevate wscript ""C:\windows\system32\slmgr.vbs"" –dli" & vbCrLf & _
+                 "    sudo cscript ""C:\windows\system32\slmgr.vbs"" " & vbCrLf & _
+                 "    sudo powershell -NoExit -Command & 'C:\Temp\Test.ps1'" & vbCrLf & _
                  "" & vbCrLf & _
-                 "    elevate powershell -NoExit -Command & 'C:\Temp\Test.ps1'" & vbCrLf & _
                  "" & vbCrLf & _
-                 "" & vbCrLf & _
-                 "The elevate command consists of the following files:" & vbCrLf & _
-                 "" & vbCrLf & _
-                 "    elevate.cmd" & vbCrLf & _
-                 "    elevate.vbs" & vbCrLf
+                 "The sudo command consists of sudo.cmd and sudo.vbs" & vbCrLf
 
 End Sub
