@@ -95,11 +95,22 @@ Sub DisplayUsage
 
     WScript.Echo "Start application that prompt for elevation (Run as Administrator)." & vbCrLf & _
                  "" & vbCrLf & _
-                 "SUDO [.|_] command" & vbCrLf & _
-                 "" & vbCrLf & _
-                 ".     Keep current directory, uses and elevated context cmd" & vbCrLf & _
-                 "_     Keep current directory, but hide the context cmd window" & vbCrLf & _
-                 "" & vbCrLf & _
+                "SUDO command" & vbCrLf & _
+				"" & vbCrLf & _
+				"    elevate command" & vbCrLf & _
+				"" & vbCrLf & _
+				"SUDO . command" & vbCrLf & _
+				"" & vbCrLf & _
+				"    elevate and preserve current directory" & vbCrLf & _
+				"" & vbCrLf & _
+				"SUDO _ command" & vbCrLf & _
+				"" & vbCrLf & _
+				"    elevate and preserve current directory but hide context window used to set context" & vbCrLf & _
+				"" & vbCrLf & _
+				"SUDO notepad %cd%\hosts" & vbCrLf & _
+				"" & vbCrLf & _
+				"    Note also the option of getting the current directory using %CD%\ where you would have used .\" & vbCrLf & _
+				 "" & vbCrLf & _
                  "" & vbCrLf & _
                  "Examples:" & vbCrLf & _
                  "" & vbCrLf & _
