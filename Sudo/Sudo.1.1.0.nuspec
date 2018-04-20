@@ -9,7 +9,7 @@
         <licenseUrl>http://www.gnu.org/licenses/old-licenses/lgpl-2.0.html</licenseUrl>
         <projectUrl>https://github.com/janhebnes/chocolatey-packages/tree/master/Sudo</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>Used from a command line as e.g. "sudo cmd" or "sudo notepad" to elevate directly from the shell.</description>
+        <description>Used from a command line as e.g. "sudo cmd" or "sudo notepad" to elevate directly from the shell, can preserve current directory using e.g "sudo . cmd"</description>
         <summary>Sudo is used to elevate to administrator from the command line.</summary>
         <releaseNotes>(Version 1.1) Introduces option for preserving current directory. e.g. "sudo . cmd" or just "sudo ."</releaseNotes>
         <tags>sudo console cmd command elevate administrator</tags>
