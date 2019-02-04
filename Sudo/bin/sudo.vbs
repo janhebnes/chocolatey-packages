@@ -22,6 +22,7 @@
 ' //                      context by using the inserted . or _ as first command argument 
 ' //                      when used a context cmd shell window is opened for setting 
 ' //                      current directory context using _ hides this window 
+' // 1.1.1   04-Feb-2019  Added the -V or -version option to query the version of sudo
 ' //
 ' // ***** End Header *****
 ' //***************************************************************************
@@ -43,6 +44,9 @@ If (WScript.Arguments.Count >= 1) Then
         OR (strFlag = "\?") OR (strFlag = "/?") OR (strFlag = "-?") OR (strFlag="h") _
         OR (strFlag = "?") Then
         DisplayUsage
+		WScript.Quit
+    ElseIf (strFlag="-V") OR (strFlag="--version") Then
+        DisplayVersion
 		WScript.Quit
     Else
 
@@ -90,6 +94,13 @@ Else
     WScript.Quit
 End If
 
+Sub DisplayVersion
+
+    WScript.Echo "Sudo version 1.1.1" & vbCrLf & _
+        "https://chocolatey.org/packages/Sudo" & vbCrLf & _
+        "https://github.com/janhebnes/chocolatey-packages/tree/master/Sudo" & vbCrLf
+
+End Sub
 
 Sub DisplayUsage
 
@@ -111,6 +122,10 @@ Sub DisplayUsage
 				"" & vbCrLf & _
 				"    Note also the option of getting the current directory using %CD%\ where you would have used .\" & vbCrLf & _
 				 "" & vbCrLf & _
+                 "SUDO -V " & vbCrLf & _
+                 "SUDO --version" & vbCrLf & _
+                 "" & vbCrLf & _
+				"    Prints the sudo version as well as the chocolatey package source" & vbCrLf & _
                  "" & vbCrLf & _
                  "Examples:" & vbCrLf & _
                  "" & vbCrLf & _
