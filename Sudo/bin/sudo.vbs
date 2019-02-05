@@ -9,8 +9,8 @@
 ' //
 ' // Usage:     (Not used directly.  Launched from Sudo.cmd)
 ' //
-' // Version:   1.1.0
-' // Date :     20/04/2018
+' // Version:   1.1.1
+' // Date :     04/02/2019
 ' //
 ' // History:
 ' // 1.0.0   01-Feb-2007  Created initial version used internally.
