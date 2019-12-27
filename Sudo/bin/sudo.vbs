@@ -9,8 +9,8 @@
 ' //
 ' // Usage:     (Not used directly.  Launched from Sudo.cmd)
 ' //
-' // Version:   1.1.1
-' // Date :     04/02/2019
+' // Version:   1.1.2
+' // Date :     27-dec-2019
 ' //
 ' // History:
 ' // 1.0.0   01-Feb-2007  Created initial version used internally.
@@ -23,7 +23,7 @@
 ' //                      when used a context cmd shell window is opened for setting 
 ' //                      current directory context using _ hides this window 
 ' // 1.1.1   04-Feb-2019  Added the -V or -version option to query the version of sudo
-' //
+' // 1.1.2   27-dec-2019  Retain current directory even with special chars (janusblack)
 ' // ***** End Header *****
 ' //***************************************************************************
 
@@ -96,7 +96,7 @@ End If
 
 Sub DisplayVersion
 
-    WScript.Echo "Sudo version 1.1.1" & vbCrLf & _
+    WScript.Echo "Sudo version 1.1.2" & vbCrLf & _
         "https://chocolatey.org/packages/Sudo" & vbCrLf & _
         "https://github.com/janhebnes/chocolatey-packages/tree/master/Sudo" & vbCrLf
 

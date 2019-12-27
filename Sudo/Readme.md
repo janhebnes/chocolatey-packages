@@ -40,7 +40,7 @@ Examples:
     sudo -V 
     sudo --version
     
-    Sudo version 1.1.1
+    Sudo version 1.1.2
     https://chocolatey.org/packages/Sudo
     https://github.com/janhebnes/chocolatey-packages/tree/master/Sudo
 
