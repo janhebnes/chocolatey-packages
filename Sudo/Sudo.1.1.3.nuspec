@@ -6,6 +6,7 @@
         <title>Sudo</title>
         <authors>Jan Hebnes</authors>
         <owners>Jan Hebnes</owners>
+        <!-- <license type="expression">LGPL-2.0-or-later</license> -->
         <licenseUrl>http://www.gnu.org/licenses/old-licenses/lgpl-2.0.html</licenseUrl>
         <projectUrl>https://github.com/janhebnes/chocolatey-packages/tree/master/Sudo</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -18,5 +19,6 @@
         <file src="bin\sudo.cmd" target="bin\sudo.cmd" />
         <file src="bin\sudo.vbs" target="bin\sudo.vbs" />
         <file src="tools\chocolateyInstall.ps1" target="tools\chocolateyInstall.ps1" />
+        <file src="tools\chocolateyUninstall.ps1" target="tools\chocolateyUninstall.ps1" />
     </files>
 </package>
